@@ -1,0 +1,38 @@
+﻿ul.tabs
+{
+    height: 100%;
+    width: 100%;
+    float: left;
+    border-bottom: none;
+    border-left: 1px solid #999999;
+}
+
+ul.tabs li
+{
+    float: left;
+    height: 100%;
+    border: 1px solid #999999;
+    border-left: none;
+    overflow: hidden;
+    background: #000000;
+}
+
+ul.tabs li a
+{
+    text-decoration:none;
+    color: #FFFFFF;
+    font-size: 0.8em;
+    padding: 10px;
+}
+
+ul.tabs li.active, ul.tabs li.active a
+{
+    background: #FFFFFF;
+    border-bottom: 1px solid #FFFFFF;
+    color:#000000;
+}
+
+.tab_content
+{
+    font-size: 1.2em;
+}

@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Earthquake Watcher Framework</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/watchlist.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        function initialize() {
+            var latlng = new google.maps.LatLng({{coords}});
+            var myOptions =
+            {
+                zoom: {{zoom}},
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.TERRAIN
+            };
+            var map = new google.maps.Map(document.getElementById("map"), myOptions);
+        }
+    </script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //When the page is loaded, hide all content.
+            $(".tab_content").hide();
+            //Activate first tab.
+            $("ul.tabs li:first").addClass("active").show();
+            //Show first tab content
+            $(".tab_content:first").show();
+
+            //On Click Event
+            $("ul.tabs li").click(function () {
+                //Remove any "active" class.
+                $("ul.tabs li").removeClass("active");
+                //Add "active" class to selected tab
+                $(this).addClass("active");
+                //Hide all tab content
+                $(".tab_content").hide();
+                //Find the href attribute value to identify the active tab + content
+                var activeTab = $(this).find("a").attr("href");
+                //Fade in the active ID content
+                $(activeTab).fadeIn();
+                return false;
+            });
+        });
+    </script>
+</head>
+<body onload="initialize()">
+    <!-- Google Map Part -->
+	<div id="map"></div>
+    <!-- Related Information Part -->
+	<div id="tab_container">
+        <!-- Tabs -->
+        <ul class="tabs">
+            <li><a href="#watchlist">Search</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#video">Videos</a></li>
+            <li><a href="#photo">Photos</a></li>
+            <li><a href="#friend">Friends</a></li>
+			<li><a href="#tweets">Tweets</a></li>
+        </ul>
+        <!-- Tab1 Stuff  Watch List -->
+        <div id="watchlist" class="tab_content">
+            <form action="" method="post">
+                <br/><input type="text" name="search">
+                <br/><input type="submit" name="go" value="Search">
+            </form>
+			{% if init %}
+				Currently watching {{currentCity}}</br>
+			{% else %}
+				{% if isParsedLocationsEmpty %}
+					<b>Sorry, no match...</b><br/>
+				{% else %}
+					Did you mean: <br/>
+					<form action="" method="post">
+						<select multiple name="choice">
+						{% for location in parsedLocations %}
+							<option value="{{location.1}}|{{location.0}}">{{location.0}}</option>
+						{% endfor %}
+						</select>
+						<br/><input type="submit" name="gothere" value="Go There">
+					</form>
+				{% endif %}
+			{% endif %}
+        </div>
+        <!-- Tab2 Stuff News Information -->
+        <div id="news" class="tab_content">
+            News Goes Here
+        </div>
+        <!-- Tab3 Stuff Video Information -->
+        <div id="video" class="tab_content">
+            Video Goes Here
+        </div>
+        <!-- Tab4 Stuff Photo Information -->
+        <div id="photo" class="tab_content">
+            Photo Goes Here
+        </div>
+        <!-- Tab5 Stuff Friend Information -->
+        <div id="friend" class="tab_content">
+            Friend Status Goes Here
+        </div>
+		<!-- Tab5 Stuff Friend Information -->
+        <div id="tweets" class="tab_content">
+            Tweets Goes Here
+        </div>
+    </div>
+</body>
+</html>
