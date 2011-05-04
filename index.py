@@ -6,6 +6,7 @@ import cgi
 from modules.inputhandler import *
 from modules.locationsearcher import *
 from modules.jsonparser import *
+from modules.quake_parser import *
 
 # Google App Engine Modules
 from google.appengine.api import users
@@ -32,7 +33,8 @@ class MainPage(webapp.RequestHandler):
             'zoom': zoom,
             'isParsedLocationsEmpty': isParsedLocationsEmpty,
             'init': init,
-            'currentCity': currentCity
+            'currentCity': currentCity,
+	    'quake_coords': quake_parser()
         }
         self.response.out.write(template.render(self.path, template_values))
 
@@ -70,14 +72,15 @@ class MainPage(webapp.RequestHandler):
             currentCity = cityToWatch.split('|')[1]
         else:
             coords = "34.07, -118.44"
-        
+
         template_values = {
             'coords': coords,
             'zoom': zoom,
             'parsedLocations': parsedLocations,
             'isParsedLocationsEmpty' : isParsedLocationsEmpty,
             'init': init,
-            'currentCity': currentCity
+            'currentCity': currentCity,
+	    'quake_coords': quake_parser()
         }
         self.response.out.write(template.render(self.path, template_values))
 
