@@ -1,0 +1,9 @@
+/* Image in Text Box */
+#searchbox
+{
+    background:#FFFFFF url(../img/magnifier.png) no-repeat;
+    padding:1px 1px 1px 22px;
+    border:1px solid #CCCCCC;
+    width:230px;
+    height:18px;
+}

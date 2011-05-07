@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="../stylesheets/tabs.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".tab_content").hide();
+            $("ul.tabs li:first").addClass("active").show();
+            $(".tab_content:first").show();
+
+            $("ul.tabs li").click(function () {
+                $("ul.tabs li").removeClass("active");
+                $(this).addClass("active");
+            });
+        });
+    </script>
+</head>
+<body>
+    <ul class="tabs">
+        <li><a href="../apis/search.html" target="target">Search</a></li>
+        <li><a href="../apis/news.html" target="target">News</a></li>
+        <li><a href="../apis/videos.html" target="target">Videos</a></li>
+        <li><a href="../apis/photos.html" target="target">Photos</a></li>
+        <li><a href="../apis/friends.html" target="target">Friends</a></li>
+        <li><a href="../apis/tweets.html" target="target">Tweets</a></li>
+    </ul>
+</body>
+</html>

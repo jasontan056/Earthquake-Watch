@@ -4,8 +4,23 @@ runtime: python
 api_version: 1
 
 handlers:
+- url: /
+  script: index.py
+  
+- url: /index\.html
+  script: index.py
+
+- url: /apis/search\.html
+  script: /apis/search.py
+
+- url: /apis/googlemap.html
+  script: /apis/googlemap.py
+
 - url: /stylesheets
   static_dir: stylesheets
+  
+- url: /frames
+  static_dir: frames
 
-- url: /.*
-  script: index.py
+- url: /img
+  static_dir: img
