@@ -10,7 +10,6 @@
     src="http://maps.google.com/maps/api/js?sensor=false">
 </script>
 <script type="text/javascript">
-  var circle;
   function initialize() {
     var latlng = new google.maps.LatLng({{coordsToGo}});
     var myOptions = {
@@ -21,28 +20,51 @@
 
     var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 
+    var infowindow = new google.maps.InfoWindow({
+        content: "" 
+    });     
+
+    // Add marker and earthquake information around earthquake area.
+    var pos; 
     {% for quake_coord in quake_coords %}
-      pos = new google.maps.LatLng({{quake_coord.0}}, {{quake_coord.1}});
-      var marker = new google.maps.Marker({
+      pos = new google.maps.LatLng({{quake_coord.2}});
+
+      var marker{{quake_coord.0}} = new google.maps.Marker({
          position: pos,
          map: map,
          title:"Earthquake!"
       });
+
+      google.maps.event.addListener(marker{{quake_coord.0}}, 'click', function() {
+            infowindow.setContent("<b>Time:</b> {{quake_coord.1}}<br/><b>Coordinates:</b> {{quake_coord.2}}<br/><b>Magnitude:</b> {{quake_coord.3}}<br/><b>Depth:</b> {{quake_coord.4}}");
+            infowindow.open(map,marker{{quake_coord.0}});
+      });
     {% endfor %}
 
-    var circile;
-    var center = new google.maps.LatLng({{coordsToGo}}); 
-    var circleOptions = {
-      strokeColor: "#458B00",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#66CD00",
-      fillOpacity: 0.35,
-      map: map,
-      center: center,
-      radius: 500000
-    };
-    circle = new google.maps.Circle(circleOptions);
+    
+    // Add red circule around earthquake area.
+    var quakeList = {};
+    {% for quake_coord in quake_coords %}
+      quakeList['{{quake_coord.0}}'] = {
+          center: new google.maps.LatLng({{quake_coord.2}}),
+          magnitude: {{quake_coord.3}}
+      };
+    {% endfor %}
+
+    var circle;
+    for (var quake in quakeList) {
+        var circleOptions = {
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.10,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          fillOpacity: 0.10,
+          map: map,
+          center: quakeList[quake].center,
+          radius: 10000 * quakeList[quake].magnitude
+        };
+        circle = new google.maps.Circle(circleOptions);
+     }
   }
 </script>
 </head>
