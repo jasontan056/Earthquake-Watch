@@ -2,7 +2,9 @@ import urllib2
 import string
 
 def quake_parser():
-    response = urllib2.urlopen('http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M5.txt')
+#    response = urllib2.urlopen('http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M5.txt')
+    response = urllib2.urlopen('http://earthquake.usgs.gov/earthquakes/catalogs/eqs7day-M2.5.txt')
+
     feed = response.read().split('\n')
     #remove the first and the last lines from the feed
     del feed[0]
