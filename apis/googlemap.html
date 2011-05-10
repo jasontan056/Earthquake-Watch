@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #map_canvas { height: 100% }
+</style>
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=false">
+</script>
+<script type="text/javascript">
+  function initialize() {
+
+    //////////////////////////////////////////////////////////////
+    ///////////Go to the watch place.////////////////////////////
+    ////////////////////////////////////////////////////////////
+
+    // coordsToGo is the location where the user selects to watch
+    var latlng = new google.maps.LatLng({{coordsToGo}});
+
+    // set up map style
+    var myOptions = {
+      zoom: 6,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    // create the map
+    var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+
+
+   // create the infowindow
+    var infowindow = new google.maps.InfoWindow({
+        content: "" 
+    });     
+
+    //////////////////////////////////////////////////////////////////////////////////
+    ////////// Add marker and earthquake information around earthquake area./////////
+    ////////////////////////////////////////////////////////////////////////////////
+    var pos; 
+    {% for quake_coord in quake_coords %}
+      // location to add the marker
+      pos = new google.maps.LatLng({{quake_coord.2}});
+      // apply the marker, marker are identified by the earthquake id obtained from USGS
+      var marker{{quake_coord.0}} = new google.maps.Marker({
+         position: pos,
+         map: map,
+         title:"Earthquake!"
+      });
+
+      // let google capture the marker's click event, and display the basic earthquake info
+      google.maps.event.addListener(marker{{quake_coord.0}}, 'click', function() {
+            infowindow.setContent("<b>Time:</b> {{quake_coord.1}}<br/>"+
+                                  "<b>Coordinates:</b> {{quake_coord.2}}<br/>"+
+                                  "<b>Magnitude:</b> {{quake_coord.3}}<br/>"+
+                                  "<b>Depth:</b> {{quake_coord.4}}<br/>"+
+                                  "<b>Region: </b>{{quake_coord.5}}");
+            infowindow.open(map,marker{{quake_coord.0}});
+      });
+    {% endfor %}
+
+    
+    //////////////////////////////////////////////////////////////////////////
+    /////////////// Add red circules around earthquake area./////////////////
+   /////////////////////////////////////////////////////////////////////////
+    var quakeList = {};
+    {% for quake_coord in quake_coords %}
+      quakeList['{{quake_coord.0}}'] = {
+          center: new google.maps.LatLng({{quake_coord.2}}),
+          magnitude: {{quake_coord.3}}
+      };
+    {% endfor %}
+
+    // configure circles and draw them on the map
+    var circle;
+    for (var quake in quakeList) {
+        var circleOptions = {
+          strokeColor: "#FF0000",
+          strokeOpacity: 0.10,
+          strokeWeight: 2,
+          fillColor: "#FF0000",
+          fillOpacity: 0.10,
+          map: map,
+          center: quakeList[quake].center,
+          radius: 10000 * quakeList[quake].magnitude
+        };
+        circle = new google.maps.Circle(circleOptions);
+     }
+  }
+</script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas" style="width:100%; height:100%"></div>
+</body>
+</html>
