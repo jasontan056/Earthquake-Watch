@@ -4,8 +4,9 @@
 <head>
     <title>Earthquake Watcher Framework</title>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	
     <link rel="stylesheet" type="text/css" href="stylesheets/layout.css" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/watchlist.css" />
+	<link rel="stylesheet" type="text/css" href="stylesheets/search_tab.css" />
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
@@ -106,7 +107,7 @@
     });
   }
  
-//JQuery UI Ajax Tab Code
+    //JQuery UI Ajax Tab Code
     $(function() {
         $( "#tabs" ).tabs({
             ajaxOptions: {
@@ -118,30 +119,39 @@
             }
         });
     });
+	
+    // Change the location when the user hit enter.
+    $(document).ready(function () {
+        $("#address").keydown(function(event) {
+	        if(event.keyCode == "13")
+                codeAddress();
+	    });
+	});
     </script>
 </head>
-<body onload="initialize()", style="font-size:62.5%;">
+<body onload="initialize()">
     <!-- Google Map Part -->
     <div id="map"></div>
     <!-- Related Information Part -->
     <div id="tab_container">
  
-<div id="tabs">
-     <ul>
-         <li><a href="#search">Search</a></li>
-         <li><a href="apis/news.html"><span>News</span></a></li>
-         <li><a href="apis/video.html"><span>Videos</span></a></li>
-         <li><a href="apis/photos.html"><span>Photos</span></a></li>
-         <li><a href="apis/friends.html"><span>Friends</span></a></li>
-         <li><a href="apis/tweets.html"><span>Tweets</span></a></li>
-     </ul>
- 
-     <div id="search">
-    <input id="address" type="textbox" value="Sydney, NSW">
-    <input type="button" value="Geocode" onclick="codeAddress()">
-     </div>
-</div>
- 
+		<div id="tabs" style="font-size:62.5%; margin-top: 0;">
+			<ul id="tab_list">
+				<li><a href="#search">Search</a></li>
+				<li><a href="apis/news.html"><span>News</span></a></li>
+				<li><a href="apis/video.html"><span>Videos</span></a></li>
+				<li><a href="apis/photos.html"><span>Photos</span></a></li>
+				<li><a href="apis/friends.html"><span>Friends</span></a></li>
+				<li><a href="apis/tweets.html"><span>Tweets</span></a></li>
+			</ul>
+			
+			<div id="search">
+				<input id="address" type="textbox" value="Sydney, NSW">
+				<input id="search_btn" type="button" value="Search" onclick="codeAddress()">
+			</div>
+			
+		</div>
+		
     </div>
 </body>
 </html>

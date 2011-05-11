@@ -1,0 +1,17 @@
+/* Image in Text Box */
+#address
+{
+    background:#FFFFFF url(../img/magnifier.png) no-repeat;
+    padding:1px 1px 1px 22px;
+    border:1px solid #CCCCCC;
+    width:230px;
+    height:18px;
+	font-size: 1.3em;
+}
+
+#search_btn
+{
+    font-size: 1.3em;
+    padding-left: 10px;
+	padding-right: 10px;
+}
