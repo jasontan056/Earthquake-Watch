@@ -2,6 +2,17 @@
 <head>
 </head>
 <body>
-  Tweets
+  {% if isResultEmpty %}
+    <b>Sorry, no tweets around this region...</b><br/>
+  {% else %}
+    {% for tweet in tweets %}
+	  <img src="{{tweet.1}}" align="right" /><br/>
+	  <b> User: </b>{{tweet.3}}<br/>
+	  <b> From: </b> {{tweet.0}}<br/>
+	  <b> At: </b> {{tweet.2}}<br/>
+	  <b> Wrote: </b>{{tweet.4}}<br/>
+	  <hr/>
+	{% endfor %}
+  {% endif %}
 </body>
 </html>

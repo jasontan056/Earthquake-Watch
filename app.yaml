@@ -15,6 +15,9 @@ handlers:
 
 - url: /apis/googlemap.html
   script: /apis/googlemap.py
+  
+- url: /apis/tweets.html
+  script: /apis/tweets.py
 
 - url: /stylesheets
   static_dir: stylesheets
