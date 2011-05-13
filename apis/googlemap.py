@@ -22,8 +22,8 @@ class GoogleMapPage(webapp.RequestHandler):
             coordsToGo = self.defaultCoords
 
         template_values = {
-            'coordsToGo': coordsToGo,
-            'quake_coords': quake_parser()
+#            'coordsToGo': coordsToGo,
+#            'quake_coords': quake_parser()
         }
         
         self.response.out.write(template.render(self.path, template_values))

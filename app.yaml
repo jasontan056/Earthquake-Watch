@@ -13,11 +13,8 @@ handlers:
 - url: /index\.html
   script: index.py
 
-- url: /apis/search\.html
-  script: /apis/search.py
-
-- url: /apis/googlemap.html
-  script: /apis/googlemap.py
+- url: /apis/news\.html
+  script: /apis/news.py
 
 - url: /stylesheets
   static_dir: stylesheets
