@@ -3,12 +3,11 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <title>The Hello World of News Search</title>
-    <script src="https://www.google.com/jsapi?key=ABQIAAAAc8ZpHIHeUmpfmlqWVqwKphT3yGmeNLtbOVl0YckPuPNp7bcOuRSDXFX3OCaQXrypTvYscF2ntYuq1A"></script>
+
     <script type="text/javascript">
       
       // This code generates a "Raw Searcher" to handle search queries. The Raw 
-      // Searcher requires you to handle and draw the search results manually.
-      google.load('search', '1');
+      // Searcher requires you to handle and draw the search results manually
 
       var newsSearch;
 
@@ -55,5 +54,8 @@
   <body style="font-family: Arial;border: 0 none;">
     <div id="branding"  style="float: left;"></div><br />
     <div id="content">Loading...</div>
+    <script type="text/javascript">
+	onLoad();
+    </script>
   </body>
 </html>
