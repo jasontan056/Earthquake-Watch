@@ -25,10 +25,16 @@ ul.tabs li
 
 ul.tabs li a
 {
+    font-family:Arial,Helvetica,sans-serif;
     text-decoration:none;
     color: #FFFFFF;
     font-size: 0.8em;
     padding: 10px;
+}
+
+ul.tabs li:hover
+{
+    background: #7F7F7F;
 }
 
 ul.tabs li.active, ul.tabs li.active a

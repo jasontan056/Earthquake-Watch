@@ -9,7 +9,7 @@
             $(".tab_content").hide();
             $("ul.tabs li:first").addClass("active").show();
             $(".tab_content:first").show();
-
+			
             $("ul.tabs li").click(function () {
                 $("ul.tabs li").removeClass("active");
                 $(this).addClass("active");
@@ -17,14 +17,14 @@
         });
     </script>
 </head>
-<body>
+<body style="overflow: hidden" scrolling="no">
     <ul class="tabs">
-        <li><a href="../apis/search.html" target="target">Search</a></li>
-        <li><a href="../apis/news.html" target="target">News</a></li>
-        <li><a href="../apis/videos.html" target="target">Videos</a></li>
-        <li><a href="../apis/photos.html" target="target">Photos</a></li>
-        <li><a href="../apis/friends.html" target="target">Friends</a></li>
-        <li><a href="../apis/tweets.html" target="target">Tweets</a></li>
+        <li><a href="../apis/search.html" target="target" id="Search">Search</a></li>
+        <li><a href="../apis/news.html" target="target" id="News">News</a></li>
+        <li><a href="../apis/videos.html" target="target" id="Videos">Videos</a></li>
+        <li><a href="../apis/photos.html" target="target" id="Photos">Photos</a></li>
+        <li><a href="../apis/friends.html" target="target" id="Friends">Friends</a></li>
+        <li><a href="../apis/tweets.html" target="target" id="Tweets">Tweets</a></li>
     </ul>
 </body>
 </html>

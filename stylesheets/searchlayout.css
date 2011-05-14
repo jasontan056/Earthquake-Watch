@@ -3,3 +3,52 @@ body
     font-family:Arial,Helvetica,sans-serif;
     font-size: 0.8em;
 }
+
+/* Image in Text Box */
+#searchbox
+{
+    background:#FFFFFF url(../img/magnifier.png) no-repeat;
+    padding:1px 1px 1px 22px;
+    border:1px solid #CCCCCC;
+    width:230px;
+    height:18px;
+}
+
+#choices
+{
+    margin-top: 0;
+    padding: 0;
+    width: 100%;
+    float: left;
+    border-bottom: none;
+}
+
+
+#choices li
+{
+    border: 1px solid #000000;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    overflow: hidden;
+}
+
+#choices li:hover, #choices li:hover a
+{
+    border: 1px solid #000000;
+    border-left: none;
+    border-top: none;
+    border-right: none;
+    overflow: hidden;
+    background: #000000;
+    color: #FFFFFF;
+}
+
+
+#choices li a
+{
+    text-decoration:none;
+    color: #000000;
+    font-size: 0.8em;
+    padding: 10px;
+}

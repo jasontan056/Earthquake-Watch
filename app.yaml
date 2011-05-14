@@ -1,4 +1,4 @@
-application: earthquake-watch
+application: experimenths
 version: 1
 runtime: python
 api_version: 1
@@ -15,6 +15,12 @@ handlers:
 
 - url: /apis/googlemap.html
   script: /apis/googlemap.py
+  
+- url: /apis/tweets\.html
+  script: /apis/tweets.py
+  
+- url: /apis/news\.html
+  script: /apis/news.py
 
 - url: /stylesheets
   static_dir: stylesheets

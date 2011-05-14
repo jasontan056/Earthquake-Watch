@@ -1,4 +1,11 @@
+import urllib2
 from django.utils import simplejson as json
+
+# This function returns the search of location in json format.
+def getGoogleResult(location):
+    url = "http://maps.googleapis.com/maps/api/geocode/json?address="+location+"&sensor=true"
+    webpage = urllib2.urlopen(url)
+    return webpage.read()
 
 # This function returns a list of tuples.
 # First element of the tuple is the formated address of the city.

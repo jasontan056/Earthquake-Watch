@@ -6,11 +6,10 @@
   body { height: 100%; margin: 0px; padding: 0px }
   #map_canvas { height: 100% }
 </style>
-<script type="text/javascript"
-    src="http://maps.google.com/maps/api/js?sensor=false">
-</script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
-  function initialize() {
+	var map;
+    function initialize() {
 
     //////////////////////////////////////////////////////////////
     ///////////Go to the watch place.////////////////////////////
@@ -27,7 +26,7 @@
     };
 
     // create the map
-    var map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+	map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 
 
    // create the infowindow
@@ -51,6 +50,9 @@
 
       // let google capture the marker's click event, and display the basic earthquake info
       google.maps.event.addListener(marker{{quake_coord.0}}, 'click', function() {
+			parent.target.document.cookie = "geocode=\"{{quake_coord.2}}\" region=\"{{quake_coord.5}}\"";
+			parent.target.location.reload();
+			map.setCenter(new google.maps.LatLng({{quake_coord.2}}));
             infowindow.setContent("<b>Time:</b> {{quake_coord.1}}<br/>"+
                                   "<b>Coordinates:</b> {{quake_coord.2}}<br/>"+
                                   "<b>Magnitude:</b> {{quake_coord.3}}<br/>"+
@@ -83,11 +85,20 @@
           fillOpacity: 0.10,
           map: map,
           center: quakeList[quake].center,
-          radius: 10000 * quakeList[quake].magnitude
+          radius: 20000 * Math.pow(Math.sqrt(2), quakeList[quake].magnitude)
         };
         circle = new google.maps.Circle(circleOptions);
      }
   }
+	
+  // Center the map at the location the user want to watch.
+  function goTo(latLng)
+  {
+	var lat = parseFloat(latLng.split(",")[0]);
+	var lng = parseFloat(latLng.split(",")[1]);
+	map.panTo(new google.maps.LatLng(lat, lng));
+  }
+  
 </script>
 </head>
 <body onload="initialize()">

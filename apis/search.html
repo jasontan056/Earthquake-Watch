@@ -1,50 +1,101 @@
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="../stylesheets/searchbox.css" />
-    <link rel="stylesheet" type="text/css" href="../stylesheets/choosecity.css" />
     <link rel="stylesheet" type="text/css" href="../stylesheets/searchlayout.css" />
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+	<script type="text/javascript">
+		function shout()
+		{
+			alert("asdf");
+		}
+		var geocoder = new google.maps.Geocoder();
+		function codeAddress()
+		{
+			var address = document.getElementById("searchbox").value;
+			var result = document.getElementById("result");
+			var choices = document.getElementById("choices");
+			geocoder.geocode( { 'address': address}, function(results, status)
+			{
+				if (status == google.maps.GeocoderStatus.OK)
+				{
+					result.innerHTML = "Did you mean:";
+					for(var i = 0; i < results.length; i++)
+					{
+						var li = document.createElement("li");
+						var a = document.createElement("a");
+						var name = "";
+						for(var j = 0; j < results[i].address_components.length; j++)
+						{
+							if(j == 0)
+								name += results[i].address_components[j].long_name + ", ";
+								
+							if(j > 0 && results[i].address_components[j].long_name != results[i].address_components[j - 1].long_name)
+								name += results[i].address_components[j].long_name + ", ";
+						}
+						name = name.substring(0,name.length-2);
+						
+						a.innerHTML = name;
+						a.target = "gmap";
+						
+						var coords = results[i].geometry.location.toString();
+						a.href = coords.substring(1, coords.length - 1);
+						a.value = name;
+						
+						li.appendChild(a);
+						li.name = "single_choice";
+						li.onclick = "shout()";
+						choices.appendChild(li);
+					}
+				} 
+				else
+					result.innerHTML = "Sorry, no result found for "+address+"...";
+			});
+		}
+	</script>
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("ul.choices li a").click(function () {
-                var cityName = $(this).attr("value");
-                $("#cityName").attr("value",cityName);
-                $.ajax({
-                      type: "POST",
-                      url: "",
-                      data: $("#locationSearch").serialize(),
-                      success: function(response){
-                          document.write(response);
-                      }
-                });
-            });
+        $(document).ready(function ()
+		{
+			$("#searchbox").keydown(function(event) {
+				if(event.keyCode == "13")
+				{
+					var oldChoices = document.getElementById("choices");
+					oldChoices.parentNode.removeChild(oldChoices);
+					
+					var newChoices = document.createElement("ul");
+					newChoices.id = "choices";
+					document.body.appendChild(newChoices);
+					
+					codeAddress();
+				}
+			});
+			
+			$("#searchbtn").click(function() {
+				var oldChoices = document.getElementById("choices");
+				oldChoices.parentNode.removeChild(oldChoices);
+					
+				var newChoices = document.createElement("ul");
+				newChoices.id = "choices";
+				document.body.appendChild(newChoices);
+				
+				codeAddress();
+			});
+			
+			$("#choices li").live("click",function() {
+				var latLng = $(this).find("a").attr("href");
+				var name = $(this).find("a").attr("value");
+				parent.gmap.goTo(latLng);
+				
+				return false;
+			});
         });
     </script>
 </head>
 <body>
-	<b>Please enter a location to watch: </b>
-	<form action="" method="post" id="locationSearch">
-		<input type="text" name="search" id="searchbox">
-		<input type="submit" name="go" value="Search">
-                <input type="text" name="choice" id="cityName" value="" hidden>
-                <input type="text" name="preLocationPost" value="{{previousLocation}}" hidden>
-       </form>
-        {% if init %}
-                <b>Now watching: </b>{{currentLocation}} <br/>
-        {% else %}
-                <b>Now watching: </b>{{currentLocation}} <br/>
-                {% if isParsedLocationsEmpty %}
-                       <br/> <b>Sorry, no result found for "{{inputLocation}}"...</b><br/>
-                {% else %}
-                        <br/><b>Did you mean:</b> 
-                            <ul class="choices">
-                            {% for location in parsedLocations %}
-                                    <li>
-                                    <a value="{{location.0}}" href="googlemap.html?coords={{location.1}}" target="map">{{location.0}}</a>
-                                    </li>
-                            {% endfor %}
-                            </ul>
-                {% endif %}
-        {% endif %}
+	<b>Please enter a location to watch: </b><br/>
+	<input type="text" name="search" id="searchbox">
+	<input type="submit" name="go" id="searchbtn" value="Search"><br/>
+	<br/><b id="result"></b><br/>
+	<ul id="choices">
+	</ul>	
 </body>
 </html>
