@@ -26,15 +26,16 @@ class TweetsPage(webapp.RequestHandler):
         isCookieSet = False
         
         region = ""
+        coords = ""
         
         if cookieString != None:
-            isCookieSet = True
             cookie.load(cookieString)
             
-            coords = cookie['geocode'].value
-            coords = coords.replace(" ", "")
-            
-            region = cookie['region'].value
+            if ('geocode' in cookie) and 'region' in cookie:
+                coords = cookie['geocode'].value
+                coords = coords.replace(" ", "")
+                region = cookie['region'].value
+                isCookieSet = True
             
             if coords != "":
                 for i in range(0,10):
