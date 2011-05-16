@@ -1,6 +1,7 @@
 # Python modules
 import os
 import cgi
+import Cookie
 
 # Our own modules
 from modules.quake_parser import *
@@ -14,15 +15,25 @@ from google.appengine.ext.webapp import template
 class GoogleMapPage(webapp.RequestHandler):
 
     path = os.path.join(os.path.dirname(__file__), 'googlemap.html')
-    # This will be changed to user's computer's coords.
-    defaultCoords = "34,-118" 
+    
     def get(self):
-        coordsToGo = self.request.get('coords')
-        if coordsToGo == "":
-            coordsToGo = self.defaultCoords
+        cookie = Cookie.SimpleCookie()
+        cookieString = os.environ.get('HTTP_COOKIE')
+        
+        coords = "30,120"
+        zoom = "3"
+    
+        if cookieString != None:
+            cookie.load(cookieString)
+            
+            if 'geocode' in cookie:
+                zoom = "7"
+                coords = cookie['geocode'].value
+                coords = coords.replace(" ", "")
 
         template_values = {
-            'coordsToGo': coordsToGo,
+            'coordsToGo': coords,
+            'zoom': zoom,
             'quake_coords': quake_parser()
         }
         
