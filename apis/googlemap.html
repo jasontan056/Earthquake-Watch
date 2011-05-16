@@ -20,7 +20,7 @@
 
     // set up map style
     var myOptions = {
-      zoom: 6,
+      zoom: {{zoom}},
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
@@ -51,8 +51,17 @@
       // let google capture the marker's click event, and display the basic earthquake info
       google.maps.event.addListener(marker{{quake_coord.0}}, 'click', function() {
 			parent.target.document.cookie = "geocode=\"{{quake_coord.2}}\" region=\"{{quake_coord.5}}\"";
-			parent.target.location.reload();
+			
+			var targetURL = parent.target.location.href;
+			var urlLength = targetURL.length;
+			
+			if (targetURL.search("search.html") != -1)
+				parent.target.displayCurrentRegion("{{quake_coord.5}}");
+			else
+				parent.target.location.reload();
+				
 			map.setCenter(new google.maps.LatLng({{quake_coord.2}}));
+			map.setZoom(7);
             infowindow.setContent("<b>Time:</b> {{quake_coord.1}}<br/>"+
                                   "<b>Coordinates:</b> {{quake_coord.2}}<br/>"+
                                   "<b>Magnitude:</b> {{quake_coord.3}}<br/>"+
@@ -97,6 +106,7 @@
 	var lat = parseFloat(latLng.split(",")[0]);
 	var lng = parseFloat(latLng.split(",")[1]);
 	map.panTo(new google.maps.LatLng(lat, lng));
+	map.setZoom(7);
   }
   
 </script>
