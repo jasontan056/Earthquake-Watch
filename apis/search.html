@@ -4,25 +4,29 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script type="text/javascript">
-		function shout()
-		{
-			alert("asdf");
-		}
-		var geocoder = new google.maps.Geocoder();
+		// Display the result of Google Map Searching.
 		function codeAddress()
 		{
+			// Create the Google Geocoder object.
+			var geocoder = new google.maps.Geocoder();
+			
+			// Access the value in the search box.
 			var address = document.getElementById("searchbox").value;
-			var result = document.getElementById("result");
-			var choices = document.getElementById("choices");
+			// Access the value in the unordered list.
+			var choices = document.createElement("ul")
+			choices.id = "choices";
+			
 			geocoder.geocode( { 'address': address}, function(results, status)
 			{
 				if (status == google.maps.GeocoderStatus.OK)
 				{
-					result.innerHTML = "Did you mean:";
 					for(var i = 0; i < results.length; i++)
 					{
+						// Create a "li" element and an "a" element.
 						var li = document.createElement("li");
 						var a = document.createElement("a");
+						
+						// Obtain the name of the location.
 						var name = "";
 						for(var j = 0; j < results[i].address_components.length; j++)
 						{
@@ -34,68 +38,132 @@
 						}
 						name = name.substring(0,name.length-2);
 						
+						// Change the value of the a.
 						a.innerHTML = name;
-						a.target = "gmap";
 						
+						// Include the name information and location information.
 						var coords = results[i].geometry.location.toString();
 						a.href = coords.substring(1, coords.length - 1);
 						a.value = name;
 						
+						// Display the result.
 						li.appendChild(a);
-						li.name = "single_choice";
-						li.onclick = "shout()";
 						choices.appendChild(li);
+						
+						document.body.appendChild(choices);
 					}
 				} 
+				// Display error message when the user input doesn't make sense.
 				else
 					result.innerHTML = "Sorry, no result found for "+address+"...";
 			});
 		}
 	</script>
     <script type="text/javascript">
-        $(document).ready(function ()
+		// Display a list of possbile places when the user enters some input.
+		function respondToInput()
+		{	
+			
+			$("#result").remove();
+			$("#choices").remove();
+		
+			var result = document.createElement("b");
+			result.id = "result";
+			
+			// Display "Did you mean?"
+			result.innerHTML = "Did you mean?";
+			document.body.appendChild(result);
+			
+			// Display the list of choices.
+			codeAddress();
+		}
+    </script>
+	<script type="text/javascript">
+		// Get the value (of variableName) in the cookie string.
+		function getCookieValue(variableName)
 		{
+			// Get the cookie string.
+			var cookieStr = document.cookie;
+			
+			// Check if the variable with a name of variableName is set.
+			var variablePos = cookieStr.search(variableName + "=");
+
+			// If not set.
+			if(variablePos == -1)
+				return "";
+
+			// If set.
+			// The first 1 means get over '=', the second 1 means get over '\"'
+			var start = variablePos + variableName.length + 1 + 1;
+			var end;
+			for(end = start; end < cookieStr.length; end++)
+				if (cookieStr[end] == "\"")
+					break;
+			
+			return cookieStr.substring(start, end);
+		}
+		
+		// Display "You are watching cityName."
+		function displayCurrentRegion(regionName)
+		{
+			// Delete previous wathing region, if any.
+			$("#watching").remove();
+			$("#region").remove();
+			
+			// Add latest watching regiong.
+			var watching = document.createElement("b");
+			var region = document.createElement("a");
+			watching.id = "watching";
+			region.id = "region";
+			
+			watching.innerHTML = "You are watching ";
+			region.innerHTML = regionName + ".<br/><br/>";
+			
+			document.body.appendChild(watching);
+			document.body.appendChild(region);
+		}
+	</script>
+	<script type="text/javascript">
+	    $(document).ready(function ()
+		{
+			var value = getCookieValue("region");
+			
+			// If it's the first time the user use this website.
+			// Display No Where as the current watching city.
+			if(value == "")
+				displayCurrentRegion("No Where");
+			else
+				displayCurrentRegion(value);
+			
+			// Respond to the event when the user hit enter.
 			$("#searchbox").keydown(function(event) {
 				if(event.keyCode == "13")
-				{
-					var oldChoices = document.getElementById("choices");
-					oldChoices.parentNode.removeChild(oldChoices);
-					
-					var newChoices = document.createElement("ul");
-					newChoices.id = "choices";
-					document.body.appendChild(newChoices);
-					
-					codeAddress();
-				}
+					respondToInput();
 			});
 			
+			// Respond to the event when the user click the search button.
 			$("#searchbtn").click(function() {
-				var oldChoices = document.getElementById("choices");
-				oldChoices.parentNode.removeChild(oldChoices);
-					
-				var newChoices = document.createElement("ul");
-				newChoices.id = "choices";
-				document.body.appendChild(newChoices);
-				
-				codeAddress();
+				respondToInput();
 			});
 			
+			// Move the map to the user s/he wants to watch.
+			// Hide the choice list.
 			$("#choices li").live("click",function() {
 				var latLng = $(this).find("a").attr("href");
 				var name = $(this).find("a").attr("value");
 				parent.gmap.goTo(latLng);
 				
+				$("#result").remove();
+				$("#choices").remove();
+				
 				return false;
 			});
         });
-    </script>
+	</script>
 </head>
 <body>
 	<b>Please enter a location to watch: </b><br/>
 	<input type="text" name="search" id="searchbox">
-	<input type="submit" name="go" id="searchbtn" value="Search"><br/>
-	<br/><b id="result"></b><br/>
-	<ul id="choices">
-	</ul>	
+	<input type="submit" name="go" id="searchbtn" value="Search"><br/><br/>
 </body>
 </html>
