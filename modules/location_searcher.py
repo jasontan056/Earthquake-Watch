@@ -10,7 +10,6 @@ def getGoogleResult(location):
 # This function returns a list of tuples.
 # First element of the tuple is the formated address of the city.
 # Second element of the tuple is the coordinate of the city.
- 
 def parseGoogleLocation(jsondata):
     obj = json.loads(jsondata)
     status = obj["status"]
