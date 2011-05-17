@@ -17,15 +17,18 @@ class GoogleMapPage(webapp.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'googlemap.html')
     
     def get(self):
+        # get cookie
         cookie = Cookie.SimpleCookie()
         cookieString = os.environ.get('HTTP_COOKIE')
         
+        # default center and size
         coords = "30,120"
         zoom = "3"
     
         if cookieString != None:
             cookie.load(cookieString)
             
+            # if cookie value is set, enlarge the map and recenter to the location
             if 'geocode' in cookie:
                 zoom = "7"
                 coords = cookie['geocode'].value
