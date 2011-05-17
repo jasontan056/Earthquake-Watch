@@ -52,3 +52,15 @@ body
     font-size: 0.8em;
     padding: 10px;
 }
+
+#region
+{
+    text-decoration: none;
+    color: black;
+}
+
+#region:hover
+{
+    background-color:black;
+	color: white;
+}
