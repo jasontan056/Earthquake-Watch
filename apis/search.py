@@ -4,7 +4,6 @@ import cgi
 import Cookie
 
 # Our own modules
-from modules.input_handler import *
 from modules.location_searcher import *
 
 # Google App Engine modules
