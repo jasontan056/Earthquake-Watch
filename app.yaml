@@ -25,6 +25,9 @@ handlers:
 - url: /stylesheets
   static_dir: stylesheets
   
+- url: /javascripts
+  static_dir: javascripts
+  
 - url: /frames
   static_dir: frames
 
