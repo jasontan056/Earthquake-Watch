@@ -2,42 +2,33 @@
 <head>
 	<link rel="stylesheet" type="text/css" href="../stylesheets/tweetslayout.css" />
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
-	<script>
-	    $(document).ready(function () {
-			$("#loading").css("display","none");
-			$("#tweet_list").css("display","inline");
-		});
-	</script>
 </head>
 <body>
-  <div id="loading">
-    <b>Loading tweets...</b>
-  </div>
-  <div id="tweet_list">
-    {% if isCookieSet %}
-	  {% if isResultEmpty %}
-		<b>Sorry, no tweets found around {{region}}...</b><br/>
-	  {% else %}
-		<b>Tweets around {{region}}. </b><br/><hr/>
-		{% for tweet in tweets %}
-		  <table class="single_tweet" border="0">
-			<tr>
-			  <td rowspan="3" valign="top"><img src="{{tweet.1}}" align="right" /><br/></td>
-			  <td><b> User: </b></td><td>{{tweet.3}}<b> From </b>{{tweet.0}}</td>
-			</tr>
-			<tr>
-			  <td><b> Time: </b></td><td>{{tweet.2}}</td>
-			</tr>
-			<tr>
-			  <td valign="top"><b> Wrote: </b></td><td>{{tweet.4}}</td>
-			</tr>
-		  </table>
-		  <hr/>
-		{% endfor %}
-	  {% endif %}
+	<div id="tweet_list">
+	{% if isCookieSet %}
+		{% if isResultEmpty %}
+			<b>Sorry, no tweets found around {{region}}...</b><br/>
+		{% else %}
+			<b>Tweets around {{region}}. </b><br/><hr/>
+			{% for tweet in tweets %}
+				<table class="single_tweet" border="0">
+					<tr>
+						<td rowspan="3" valign="top"><img src="{{tweet.1}}" align="right" /><br/></td>
+						<td><b> User: </b></td><td>{{tweet.3}}<b> From </b>{{tweet.0}}</td>
+					</tr>
+					<tr>
+						<td><b> Time: </b></td><td>{{tweet.2}}</td>
+					</tr>
+					<tr>
+						<td valign="top"><b> Wrote: </b></td><td>{{tweet.4}}</td>
+					</tr>
+				</table>
+				<hr/>
+			{% endfor %}
+		{% endif %}
 	{% else %}
-	  <b> Please select an earthquake... </b>
+		<b> Please select an earthquake... </b>
 	{% endif %}
-  </div>
+	</div>
 </body>
 </html>
