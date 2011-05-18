@@ -64,3 +64,21 @@ body
     background-color:black;
 	color: white;
 }
+
+#searchbtn
+{
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+	color: black;
+	text-decoration: none;
+}
+
+#searchbtn:hover
+{
+    border: 1px solid black;
+    padding-left: 5px;
+    padding-right: 5px;
+    background-color: black;
+    color: white;
+}
