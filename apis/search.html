@@ -7,6 +7,9 @@
 	<script type="text/javascript">
 	    $(document).ready(function ()
 		{
+			$("#result").remove();
+			$("#choices").remove();
+			
 			var currentWatching = getCookieValue("region");
 			var curWatchingGeocode = getCookieValue("geocode");
 			
