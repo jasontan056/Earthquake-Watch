@@ -9,6 +9,16 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script type="text/javascript">
 	var map;
+	var circleArray = [];
+	//create a quake list to be used in constructing circles
+	var quakeList = {};
+	{% for quake_coord in quake_coords %}
+		quakeList['{{quake_coord.0}}'] = {
+			center: new google.maps.LatLng({{quake_coord.2}}),
+			magnitude: {{quake_coord.3}}
+		};
+	{% endfor %}
+
 	function initialize() 
 	{
 		/********** set up map, map style, size, and center ***********/
@@ -20,6 +30,10 @@
 		};
 		map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
 		
+		//redraw magnitude circles if zoom is changed
+                google.maps.event.addListener(map, 'zoom_changed', drawCircles);
+		//draw magnitude circles
+		drawCircles();
 		/********** create marker, and add info window to the marker ***********/
 		var infowindow = new google.maps.InfoWindow({
 			content: "" 
@@ -48,9 +62,6 @@
 				else
 					parent.target.location.reload();
 				
-				// resize and recenter the map
-				map.setCenter(new google.maps.LatLng({{quake_coord.2}}));
-				map.setZoom(7);
 				
 				// display the info window at the marker location
 				infowindow.setContent("<b>Time:</b> {{quake_coord.1}}<br/>"+
@@ -59,23 +70,33 @@
 									  "<b>Depth:</b> {{quake_coord.4}}<br/>"+
 									  "<b>Region: </b>{{quake_coord.5}}");
 				infowindow.open(map,marker{{quake_coord.0}});
+				// resize and recenter the map
+				map.setCenter(new google.maps.LatLng({{quake_coord.2}}));
+				map.setZoom(7);
+			        drawCircles();
 			});
-    {% endfor %}
+		{% endfor %}
+	}
 
-    /********** show red circles around the earthquake area **********/
-	var quakeList = {};
-	{% for quake_coord in quake_coords %}
-		quakeList['{{quake_coord.0}}'] = {
-			center: new google.maps.LatLng({{quake_coord.2}}),
-			magnitude: {{quake_coord.3}}
-		};
-    {% endfor %}
-
-    // configure circles and draw them on the map
-	var circle;
-	for (var quake in quakeList)
-	{
-        var circleOptions = {
+	
+	function drawCircles() {
+		//delete all current circles
+		if (circleArray) {
+			var i = 0;
+			for (i = 0; i < circleArray.length; i++) {
+			circleArray[i].setMap(null);
+			}
+			circleArray.length = 0;
+		}
+		// configure circles and draw them on the map
+		var circle;
+		//get current zoom level.  this will be used for a dynamic circle radius
+		var zoomLevel = map.getZoom();
+		//cap lowest zoom to 2.  if this isn't done, the circles will be crazy big when zoomed completely out
+		if (zoomLevel < 2) {zoomLevel = 2;}
+		for (var quake in quakeList)
+		{
+			var circleOptions = {
 			strokeColor: "#FF0000",
 			strokeOpacity: 0.10,
 			strokeWeight: 2,
@@ -83,24 +104,27 @@
 			fillOpacity: 0.10,
 			map: map,
 			center: quakeList[quake].center,
-			radius: 20000 * Math.pow(Math.sqrt(2), quakeList[quake].magnitude)
+			//radius based on current zoom level and the magnitude of the quake
+			radius: (600000/Math.pow(1.8,zoomLevel)) * Math.pow(1.5, quakeList[quake].magnitude)
 		};
 		circle = new google.maps.Circle(circleOptions);
+		//push circle into a circle array
+		circleArray.push(circle);
+		}
 	}
-}
 	
-/**
- * move the center of the map to the value in latLng
- * @param[IN] latLng is the geocode of the location in a string
- * @resize and recenter the map
- */
-function goTo(latLng)
-{
-	var lat = parseFloat(latLng.split(",")[0]);
-	var lng = parseFloat(latLng.split(",")[1]);
-	map.panTo(new google.maps.LatLng(lat, lng));
-	map.setZoom(7);
-}
+	/**
+	 * move the center of the map to the value in latLng
+	 * @param[IN] latLng is the geocode of the location in a string
+	 * @resize and recenter the map
+	 */
+	function goTo(latLng)
+	{
+		var lat = parseFloat(latLng.split(",")[0]);
+		var lng = parseFloat(latLng.split(",")[1]);
+		map.panTo(new google.maps.LatLng(lat, lng));
+		map.setZoom(7);
+	}
 </script>
 </head>
 <body onload="initialize()">

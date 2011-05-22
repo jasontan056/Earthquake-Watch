@@ -1,7 +1,68 @@
 <html>
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Videos</title>
+  <script src="http://www.google.com/jsapi?key=ABQIAAAAGKc2HSNBJprU1-b-cb4gWBT3yGmeNLtbOVl0YckPuPNp7bcOuRRoEDJg5q_7-QqCw5HUyHfz_Cq5RA"
+    type="text/javascript"></script>
+  <style type="text/css">
+	.gsc-control{
+	  width:100% !important;
+	  font-family:Arial,Helvetica,sans-serif !important;
+  	  font-size: 0.9em !important;
+	}
+	table.gsc-search-box {
+	  display: none;
+	}
+	.gsc-result {
+	  border-bottom: 1px solid #303030;
+	  margin-bottom: 8px !important;
+	}
+	.gs-result .gs-snippet {
+	  margin-bottom: 8px;
+	}
+	.gsc-resultsHeader {
+	  border-bottom: 1px solid #303030 !important;
+	  margin-bottom: 8px !important;
+	}
+
+	
+  </style>
+  <script type="text/javascript">
+		google.load('search', '1');
+
+		function OnLoad() {
+
+		  // create a search control
+		  var searchControl = new google.search.SearchControl();
+
+		  // So the results are expanded by default
+		  options = new google.search.SearcherOptions();
+		  options.setExpandMode(google.search.SearchControl.EXPAND_MODE_OPEN);
+
+		  // Create a video searcher and add it to the control
+		  searchControl.addSearcher(new google.search.VideoSearch(), options);
+
+		  //show 8 results at a time
+		  searchControl.setResultSetSize('large'); 
+
+		  // Draw the control onto the page
+		  searchControl.draw(document.getElementById("videosc"));
+
+		  // Search for YouTube video.  The list of feeds can be found here:
+		  // http://www.youtube.com/rssls
+		  searchControl.execute("{{region}} earthquake");
+		}
+
+		google.setOnLoadCallback(OnLoad);
+     </script>
 </head>
-<body>
-  Video
-</body>
+ <body style="font-family: Arial;border: 0 none;">
+    {% if isCookieSet %}
+      <b>videos about the earthquake at {{region}}. </b><br/>
+      <div id="videosc">Loading...</div>
+    {% else %}
+      <b> Please select an earthquake... </b>
+    {% endif %}
+ </body>
 </html>
+
