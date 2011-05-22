@@ -5,6 +5,7 @@ import time
 import Cookie
 import urllib
 import flickrapi
+import string
 
 # Our own modules
 from modules.photos_parser import *
@@ -41,27 +42,34 @@ class PhotosPage(webapp.RequestHandler):
             if region != "":
                 apikey = '1ce8a15c20b6fcc0a71d27dbeaa8cfac'
                 flickr = flickrapi.FlickrAPI(apikey)
-                tag='Earthquake, '+region
+                region = region.replace(",","")
+                regionFields = region.split(" ")
+                shortRegion = ""
+                for field in regionFields:
+                    if field[0].isupper():
+                        shortRegion += '+'+field
+                        
+                tag="Earthquake+Fukushima"#+shortRegion
                 # from http://www.flickr.com/services/api/flickr.photos.search.html
                 # TODO: use min_upload_date? how do I get the today's date?
                 # TODO: use lat or lon? probably not...
                 rawphotolist = flickr.photos_search(api_key=apikey, tags=tag, tag_mode='all', format='json')
-                photolist = parsePhotos(rawphotolist)
+                #photolist = parsePhotos(rawphotolist)
         
             if photolist == []:
                 isResultEmpty = True
         
         
         template_values = {
-            'photolist': photolist,
+            'photolist': rawphotolist,
             'isResultEmpty': isResultEmpty,
             'isCookieSet': isCookieSet,
-            'region': region
+            'region': shortRegion
         }
         
         self.response.out.write(template.render(self.path, template_values))
 
-application = webapp.WSGIApplication([('/apis/tweets.html', TweetsPage)],debug=True)
+application = webapp.WSGIApplication([('/apis/photos.html', PhotosPage)],debug=True)
 
 def main():
     run_wsgi_app(application)

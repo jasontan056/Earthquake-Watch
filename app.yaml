@@ -1,4 +1,4 @@
-application: experimenths
+application: earthquake-watch
 version: 1
 runtime: python
 api_version: 1
@@ -21,6 +21,12 @@ handlers:
   
 - url: /apis/news\.html
   script: /apis/news.py
+
+- url: /apis/videos\.html
+  script: /apis/videos.py
+  
+- url: /apis/photos\.html
+  script: /apis/photos.py
 
 - url: /stylesheets
   static_dir: stylesheets
