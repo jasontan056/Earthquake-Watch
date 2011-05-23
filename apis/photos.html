@@ -2,9 +2,19 @@
 <head>
 </head>
 <body>
-  {{photolist}}<br/>
-  {{isResultEmpty}}<br/>
-  {{isCookieSet}}<br/>
-  {{region}}<br/>
+	<div id="photo_list">
+	{% if isCookieSet %}
+		{% if isResultEmpty %}
+			<b>Sorry, no photo found around {{region}}...</b><br/>
+		{% else %}
+			<b>Photos around {{region}}. </b><br/><hr/>
+			{% for photo in photolist %}
+				<img src="http://farm{{photo.0}}.static.flickr.com/{{photo.1}}/{{photo.2}}_{{photo.3}}.jpg" /><br/>
+			{% endfor %}
+		{% endif %}
+	{% else %}
+		<b> Please select an earthquake... </b>
+	{% endif %}
+	</div>
 </body>
 </html>

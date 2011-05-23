@@ -3,12 +3,9 @@ import os
 import cgi
 import time
 import Cookie
-import urllib
-import flickrapi
-import string
 
 # Our own modules
-from modules.photos_parser import *
+from modules.photo_searcher import *
 
 # Google App Engine modules
 from google.appengine.api import users
@@ -21,50 +18,40 @@ class PhotosPage(webapp.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'photos.html')
     
     def get(self):
+        # get cookie
         cookie = Cookie.SimpleCookie()
         cookieString = os.environ.get('HTTP_COOKIE')
         
         photolist = []
         region = ""
-        coords = ""
+
         isResultEmpty = False
         isCookieSet = False
         
+        # check if cookie exists
         if cookieString != None:
             cookie.load(cookieString)
             
-            if ('geocode' in cookie) and 'region' in cookie:
-                coords = cookie['geocode'].value
-                coords = coords.replace(" ", "")
+            # check if the value is set
+            if 'region' in cookie:
                 region = cookie['region'].value
                 isCookieSet = True
             
+            # parse out the information of the json file
             if region != "":
-                apikey = '1ce8a15c20b6fcc0a71d27dbeaa8cfac'
-                flickr = flickrapi.FlickrAPI(apikey)
-                region = region.replace(",","")
-                regionFields = region.split(" ")
-                shortRegion = ""
-                for field in regionFields:
-                    if field[0].isupper():
-                        shortRegion += '+'+field
-                        
-                tag="Earthquake+Fukushima"#+shortRegion
-                # from http://www.flickr.com/services/api/flickr.photos.search.html
-                # TODO: use min_upload_date? how do I get the today's date?
-                # TODO: use lat or lon? probably not...
-                rawphotolist = flickr.photos_search(api_key=apikey, tags=tag, tag_mode='all', format='json')
-                #photolist = parsePhotos(rawphotolist)
+                jsonFile = searchPhotos(region)
+                photolist = parsePhotos(jsonFile)
         
+            # check if the result is empty
             if photolist == []:
                 isResultEmpty = True
         
         
         template_values = {
-            'photolist': rawphotolist,
+            'photolist': photolist,
             'isResultEmpty': isResultEmpty,
             'isCookieSet': isCookieSet,
-            'region': shortRegion
+            'region' : region
         }
         
         self.response.out.write(template.render(self.path, template_values))
