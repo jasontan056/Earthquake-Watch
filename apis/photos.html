@@ -9,12 +9,12 @@
 			<b>Sorry, no photo found around {{region}}...</b><br/>
 		{% else %}
 			<b>Photos around {{region}}. </b><br/>
-			<table class="photos" border="0">
+			<table class="grid" border="0">
 			{% for sublist in tuplelist %}
 				<tr>
 				{% for photos in sublist %}
-					<td><a href="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg" target="_blank">
-							<img src="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg"  width="100px" height="100px"/>
+					<td class="cell"><a href="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg" target="_blank">
+							<img class="photo" src="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg"  width="100px" height="100px"/>
 						</a>
 					</td>
 				{% endfor %}
