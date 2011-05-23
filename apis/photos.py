@@ -41,6 +41,19 @@ class PhotosPage(webapp.RequestHandler):
             if region != "":
                 jsonFile = searchPhotos(region)
                 photolist = parsePhotos(jsonFile)
+                
+                #group photolist into a list of a list, each list contains three photos
+                tuplelist = []
+                sublist = []
+                for i in range(len(photolist)):
+                    if (i + 1) % 4 == 0:
+                        sublist.append(photolist[i])
+                        tuplelist.append(sublist)
+                        sublist = []
+                    else:
+                        sublist.append(photolist[i])
+                tuplelist.append(sublist)
+                
         
             # check if the result is empty
             if photolist == []:
@@ -48,7 +61,7 @@ class PhotosPage(webapp.RequestHandler):
         
         
         template_values = {
-            'photolist': photolist,
+            'tuplelist': tuplelist,
             'isResultEmpty': isResultEmpty,
             'isCookieSet': isCookieSet,
             'region' : region

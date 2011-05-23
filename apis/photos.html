@@ -1,5 +1,6 @@
 <html>
 <head>
+	<link rel="stylesheet" type="text/css" href="../stylesheets/photoslayout.css" />
 </head>
 <body>
 	<div id="photo_list">
@@ -7,10 +8,19 @@
 		{% if isResultEmpty %}
 			<b>Sorry, no photo found around {{region}}...</b><br/>
 		{% else %}
-			<b>Photos around {{region}}. </b><br/><hr/>
-			{% for photo in photolist %}
-				<img src="http://farm{{photo.0}}.static.flickr.com/{{photo.1}}/{{photo.2}}_{{photo.3}}.jpg" /><br/>
+			<b>Photos around {{region}}. </b><br/>
+			<table class="photos" border="0">
+			{% for sublist in tuplelist %}
+				<tr>
+				{% for photos in sublist %}
+					<td><a href="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg" target="_blank">
+							<img src="http://farm{{photos.0}}.static.flickr.com/{{photos.1}}/{{photos.2}}_{{photos.3}}.jpg"  width="100px" height="100px"/>
+						</a>
+					</td>
+				{% endfor %}
+				</tr>
 			{% endfor %}
+			</table>
 		{% endif %}
 	{% else %}
 		<b> Please select an earthquake... </b>
