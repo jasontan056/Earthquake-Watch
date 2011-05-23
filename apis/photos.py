@@ -27,6 +27,7 @@ class PhotosPage(webapp.RequestHandler):
 
         isResultEmpty = False
         isCookieSet = False
+        tuplelist = []
         
         # check if cookie exists
         if cookieString != None:
