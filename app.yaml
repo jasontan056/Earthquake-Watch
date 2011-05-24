@@ -28,6 +28,10 @@ handlers:
 - url: /apis/photos\.html
   script: /apis/photos.py
 
+- url: /apis/friends\.html
+  script: /apis/friends.py
+
+
 - url: /stylesheets
   static_dir: stylesheets
   
