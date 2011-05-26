@@ -17,9 +17,29 @@ class FriendsPage(webapp.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'friends.html')
     
     def get(self):
-        allFriendsInfo = getAllFriendsInfo("204588852914237|2.AQClZGYorXonFpM0.3600.1306267200.0-1608994936|vOInngu8dxJuZ6Q0adfSgankI_A")
+        isCookieSet = False
+        currentLocation = ""
+    
+        cookie = Cookie.SimpleCookie()
+        cookieString = os.environ.get('HTTP_COOKIE')
+        
+        fbreturn = ""
+        access_token = ""
+        expires = ""
+        if cookieString != None:
+            cookie.load(cookieString)
+            
+            if "fbreturn" in cookie:
+                fbreturn = cookie["fbreturn"].value
+                if fbreturn != "":
+                    isCookieSet = True
+                    access_token = fbreturn.split('&')[0].replace("access_token=","")
+                    expires = fbreturn.split('&')[1].replace("expires=","")
+
         template_values = {
-            'allFriendsInfo': allFriendsInfo
+            'isCookieSet': isCookieSet,
+            'access_token': access_token,
+            'expires': expires
         }
         
         self.response.out.write(template.render(self.path, template_values))
