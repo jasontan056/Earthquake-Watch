@@ -1,12 +1,25 @@
 <html>
 <head>
+	<style type="text/css">
+		#login{
+			border: 1px solid black;
+			padding-left: 5px;
+			padding-right: 5px;
+			color: black;
+			text-decoration: none;
+		}
+		#login:hover{
+			background-color:black;
+			color: white;
+		}
+	</style>
 </head>
 <body>
 	{% if isCookieSet %}
 		access token: {{access_token}}<br/>
 		expires: {{expires}}
 	{% else %}
-		<a href="https://www.facebook.com/dialog/oauth?client_id=204588852914237&redirect_uri=http://earthquake-watch.appspot.com/&scope=friends_location" target="_parent">Facebook Login</a><br/>
+		<a id="login" href="https://www.facebook.com/dialog/oauth?client_id=204588852914237&redirect_uri=http://earthquake-watch.appspot.com/&scope=friends_location" target="_parent">Facebook Login</a><br/>
 	{% endif %}
 </body>
 </html>

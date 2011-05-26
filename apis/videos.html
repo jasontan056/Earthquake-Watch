@@ -6,26 +6,28 @@
     type="text/javascript"></script>
   <style type="text/css">
 	.gsc-control{
-	  width:100% !important;
-	  font-family:Arial,Helvetica,sans-serif !important;
-  	  font-size: 0.9em !important;
+        width:100% !important;
+        font-family:Arial,Helvetica,sans-serif !important;
+        font-size: 0.8em !important;
 	}
-	table.gsc-search-box {
-	  display: none;
-	}
-	.gsc-result {
-	  border-bottom: 1px solid #303030;
-	  margin-bottom: 8px !important;
-	}
+    table.gsc-search-box {
+        display: none;
+    }
+    .gsc-result {
+        border-bottom: 1px solid #303030;
+        margin-bottom: 8px !important;
+    }
 	.gs-result .gs-snippet {
-	  margin-bottom: 8px;
+          margin-bottom: 8px;
+    }
+    .gsc-resultsHeader {
+        border-bottom: 1px solid #303030 !important;
+        margin-bottom: 8px !important;
+    }
+	.title {
+		font-family:Arial,Helvetica,sans-serif !important;
+        font-size: 0.8em !important;
 	}
-	.gsc-resultsHeader {
-	  border-bottom: 1px solid #303030 !important;
-	  margin-bottom: 8px !important;
-	}
-
-	
   </style>
   <script type="text/javascript">
 		google.load('search', '1');
@@ -58,10 +60,10 @@
 </head>
  <body style="font-family: Arial;border: 0 none;">
     {% if isCookieSet %}
-      <b>videos about the earthquake at {{region}}. </b><br/>
+      <b class="title">Videos about the earthquake at {{region}}. </b><br/>
       <div id="videosc">Loading...</div>
     {% else %}
-      <b> Please select an earthquake... </b>
+      <b class="title"> Please select an earthquake... </b>
     {% endif %}
  </body>
 </html>
