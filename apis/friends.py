@@ -2,6 +2,7 @@ import os
 import cgi
 import time
 import Cookie
+import string
 
 # Our own modules
 from modules.friends_searcher import *
@@ -17,7 +18,8 @@ class FriendsPage(webapp.RequestHandler):
     path = os.path.join(os.path.dirname(__file__), 'friends.html')
     
     def get(self):
-        isCookieSet = False
+        isQuakeSet = False
+        isFBSet = False
         currentLocation = ""
     
         cookie = Cookie.SimpleCookie()
@@ -26,20 +28,39 @@ class FriendsPage(webapp.RequestHandler):
         fbreturn = ""
         access_token = ""
         expires = ""
+        infoString = ""
+        coords = ""
+        region = ""
+        
         if cookieString != None:
             cookie.load(cookieString)
-            
             if "fbreturn" in cookie:
                 fbreturn = cookie["fbreturn"].value
                 if fbreturn != "":
-                    isCookieSet = True
+                    isFBSet = True
                     access_token = fbreturn.split('&')[0].replace("access_token=","")
                     expires = fbreturn.split('&')[1].replace("expires=","")
+                    
+                    friendsInfo = getAllFriendsInfo(access_token)
+                    
+                    for singleFriend in friendsInfo:
+                        infoString += string.join(singleFriend[1:], ';') + '|'
+
+            if ('geocode' in cookie) and 'region' in cookie:
+                coords = cookie['geocode'].value
+                coords = coords.replace(" ", "")
+                region = cookie['region'].value
+                isQuakeSet = True
+
 
         template_values = {
-            'isCookieSet': isCookieSet,
+            'isQuakeSet': isQuakeSet,
+            'isFBSet': isFBSet,
             'access_token': access_token,
-            'expires': expires
+            'expires': expires,
+            'infoString': infoString,
+            'region': region,
+            'coords': coords
         }
         
         self.response.out.write(template.render(self.path, template_values))

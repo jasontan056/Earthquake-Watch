@@ -38,6 +38,11 @@ def getFriendInfo(accessToken, friendId):
     id = ""
     name = ""
     addr = ""
+    addrId = ""
+    lat = ""
+    lng = ""
+    friendLoc = ""
+    link = ""
     
     # parse out info
     if rawInfo != "":
@@ -49,12 +54,25 @@ def getFriendInfo(accessToken, friendId):
         if 'name' in obj:
             name = obj['name']
             
+        if "link" in obj:
+            link = obj["link"]
+            
         if 'location' in obj:
             if 'name' in obj['location']:
                 addr = obj['location']['name']
-        
-    
-    return (id, name, addr)
+            if 'id' in obj['location']:
+                addrId = obj['location']['id']
+                url = "https://graph.facebook.com/" + addrId + "/?access_token=" + accessToken
+                webpage = urllib2.urlopen(url)
+                rawInfo = webpage.read()
+                
+                obj = json.loads(rawInfo)
+                if "location" in obj:
+                    lat = str(obj["location"]["latitude"])
+                    lng = str(obj["location"]["longitude"])
+                    friendLoc = lat + "," + lng
+                    
+    return (id, name, addr, friendLoc, link)
     
 # returns a list of tuples
 # each tuple contains the (id, name, addr) of the friend

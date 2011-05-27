@@ -1,25 +1,95 @@
 <html>
 <head>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.min.js"></script>
 	<style type="text/css">
-		#login{
-			border: 1px solid black;
-			padding-left: 5px;
-			padding-right: 5px;
-			color: black;
-			text-decoration: none;
-		}
-		#login:hover{
-			background-color:black;
-			color: white;
+		#tbl {
+			align: left;
 		}
 	</style>
+    <style type="text/css">
+        #login{
+            border: 1px solid black;
+            padding-left: 5px;
+            padding-right: 5px;
+            color: black;
+            text-decoration: none;
+        }
+        #login:hover{
+            background-color:black;
+            color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        function sortByDist(f1, f2)
+        {
+            return f1.dist - f2.dist;
+
+        }
+        function computeDistance(quake, friend)
+        {
+            var c1 = quake.split(",");
+            var c2 = friend.split(",");
+            var x1 = parseFloat(c1[0]);
+            var y1 = parseFloat(c1[1]);
+            var x2 = parseFloat(c2[0]);
+            var y2 = parseFloat(c2[1]);
+            var x = 69.1 * (x2 - x1);
+            var y = 53.0 * (y2 - y1);
+
+            var dist = Math.sqrt(x*x + y*y);
+            return dist;
+        }
+        {% if isQuakeSet %}
+            sessionStorage.infoString = "{{infoString}}";
+        {% endif %}
+    </script>
 </head>
 <body>
-	{% if isCookieSet %}
-		access token: {{access_token}}<br/>
-		expires: {{expires}}
-	{% else %}
-		<a id="login" href="https://www.facebook.com/dialog/oauth?client_id=204588852914237&redirect_uri=http://earthquake-watch.appspot.com/&scope=friends_location" target="_parent">Facebook Login</a><br/>
-	{% endif %}
+    {% if isQuakeSet %}
+        {% if isFBSet %}
+            <script type="text/javascript">
+                var quakeCoords = "{{coords}}";
+                var friendInfoList = sessionStorage.infoString.split("|");
+                var friends = new Array();
+                var count = 0;
+                for(var i = 0; i < friendInfoList.length - 1; i++)
+                {
+                    var singleFriend = friendInfoList[i].split(";");
+                    var name = singleFriend[0];
+                    var addr = singleFriend[1];
+                    var addrGeocode = singleFriend[2];
+					var link = singleFriend[3];
+                    var dist = computeDistance(quakeCoords, addrGeocode);
+                    if(dist<100)
+                    {
+						
+                        friends[count] = new Object();
+                        friends[count].name = name;
+                        friends[count].addr = addr;
+                        friends[count].dist = dist.toFixed(2);
+						friends[count].link = link;
+                        count++;
+                    }
+                }
+                if(count>0)
+                {
+                    document.write("<table id=\"tbl\" align=\"left\" border=\"1\"><tr><th>Name</th><th>Address</th><th>Miles to Earthquake</th></tr>");
+                    friends.sort(sortByDist);
+                    for(var i=0;i<count;i++)
+                    {
+                        document.write("<tr><td>" + "<a target=\"_blank\" href=\"" + friends[i].link + "\">" + friends[i].name + "</a>" + "</td><td>" + friends[i].addr + "</td><td>" + friends[i].dist + "</td></tr>");
+                    }
+					document.write("</table>");
+                }
+            </script>
+        {% else %}
+            <a id="login" href="https://www.facebook.com/dialog/oauth?client_id=204588852914237&redirect_uri=http://earthquake-watch.appspot.com/&scope=friends_location" target="_parent">Facebook Login</a><br/>
+        {% endif %}
+    {% else %}
+        <b> Please select an earthquake...</b><br/>
+    {% endif %}
+    <div id="friends">
+        <b id="list"></b>
+    </div>
 </body>
 </html>
